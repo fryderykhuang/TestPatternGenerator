@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <!--        <StartupObject>TestPatternGenerator.Program</StartupObject>-->
+        <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <ApplicationIcon>favicon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <!--        <IsAotCompatible>true</IsAotCompatible>-->
+        <PublishAot>true</PublishAot>
+        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <DebuggerSupport>false</DebuggerSupport>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+        <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+        <EventSourceSupport>false</EventSourceSupport>
+        <StackTraceSupport>false</StackTraceSupport>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <UseSystemResourceKeys>true</UseSystemResourceKeys>
+        <InvariantGlobalization>true</InvariantGlobalization>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Include="favicon.ico" />
+    </ItemGroup>
+    <ItemGroup>
+        <RdXmlFile Include="rd.xml"/>
+        <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0"/>
+        <PackageReference Include="WinFormsComInterop" Version="0.4.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="MainForm.cs"/>
+        <Compile Update="DrawingSurface.WhiteBalance.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Gamma.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Geometry.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Convergence.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Resolution.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Spectrum.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DrawingSurface.Text.cs">
+            <DependentUpon>PatternSurface.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Controls\NoDblClickLabel.cs">
+          <SubType>Component</SubType>
+        </Compile>
+        <Compile Update="Controls\RepeatButton.cs">
+          <SubType>Component</SubType>
+        </Compile>
+    </ItemGroup>
+
+</Project>
