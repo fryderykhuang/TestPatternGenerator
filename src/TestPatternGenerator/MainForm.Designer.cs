@@ -32,7 +32,6 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
-        ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
         tabControl1 = new TabControl();
         tabPage2 = new TabPage();
         splitContainer2 = new SplitContainer();
@@ -1251,7 +1250,6 @@ partial class MainForm
         Controls.Add(tabControl1);
         Controls.Add(groupBox2);
         FormBorderStyle = FormBorderStyle.FixedSingle;
-        Icon = (Icon)resources.GetObject("$this.Icon");
         MaximizeBox = false;
         MinimizeBox = false;
         Name = "MainForm";

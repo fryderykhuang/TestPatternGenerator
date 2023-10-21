@@ -127,9 +127,8 @@ public partial class DrawingSurface
         var rowHeight = Math.Max(c1s, c2s);
 
         for (int y = 0, k = 0; y < _screenHeight; y += rowHeight, ++k)
-        {
             if (k % 2 == 0)
-                for (int x = 0; x < _screenWidth;)
+                for (var x = 0; x < _screenWidth;)
                 {
                     g.FillRectangle(_resolutionBrush1, x, y, c1s, c1s);
                     x += c1s;
@@ -137,24 +136,13 @@ public partial class DrawingSurface
                     x += c2s;
                 }
             else
-                for (int x = 0; x < _screenWidth;)
+                for (var x = 0; x < _screenWidth;)
                 {
                     g.FillRectangle(_resolutionBrush2, x, y, c2s, c2s);
                     x += c2s;
                     g.FillRectangle(_resolutionBrush1, x, y, c1s, c1s);
                     x += c1s;
                 }
-        }
-    }
-
-    private enum DiagonalZigzagState
-    {
-        HitBottom,
-        HitTop,
-        HitRight,
-        HitLeft,
-        GoLb,
-        GoRt
     }
 
     private void DrawDotResolutionPattern2(Graphics g)
@@ -181,8 +169,8 @@ public partial class DrawingSurface
 
         int y = 0, x = 0;
         bool dY = true, dX = true;
-        DiagonalZigzagState state = DiagonalZigzagState.HitTop;
-        for (int i = 0; ; ++i)
+        var state = DiagonalZigzagState.HitTop;
+        for (var i = 0;; ++i)
         {
             var size = sizes[i % 2];
             var brush = brushes[i % 2];
@@ -230,5 +218,15 @@ public partial class DrawingSurface
                     throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    private enum DiagonalZigzagState
+    {
+        HitBottom,
+        HitTop,
+        HitRight,
+        HitLeft,
+        GoLb,
+        GoRt
     }
 }

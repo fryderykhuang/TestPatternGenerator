@@ -7,5 +7,5 @@ public enum ResolutionPatterns
     HorizontalStripeSizeGrowing,
     VerticalStripeSizeGrowing,
     Dot1,
-    Dot2,
+    Dot2
 }

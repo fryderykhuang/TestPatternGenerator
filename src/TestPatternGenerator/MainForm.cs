@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -7,17 +8,18 @@ namespace TestPatternGenerator;
 
 public sealed partial class MainForm : Form
 {
-    private readonly IEventBus _eventBus;
+    private static readonly int PatternCategoryCount =
+        Enum.GetValues<PatternCategories>().Select(x => (int) x).Max() + 1;
+
     private readonly DrawingSurface _drawingSurfaceForm;
+    private readonly IEventBus _eventBus;
     private readonly SettingsManager _settingsManager;
-    private readonly IServiceProvider _sp;
     private ConvergencePageSettings _convergenceSettings = new();
     private GammaPageSettings _gammaSettings = new();
     private PatternViewState _patternViewState = new();
     private ResolutionPageSettings _resolutionSettings = new();
     private SpectrumPageSettings _spectrumSettings = new();
     private WhiteBalancePageSettings _whiteBalancePageSettings = new();
-    private static readonly int PatternCategoryCount = Enum.GetValues<PatternCategories>().Select(x => (int)x).Max() + 1;
 
 
     public MainForm(IEventBus eventBus, IServiceProvider sp,
@@ -30,19 +32,13 @@ public sealed partial class MainForm : Form
         SettingsManager settingsManager)
     {
         _eventBus = eventBus;
-        _sp = sp;
         _drawingSurfaceForm = sp.GetRequiredService<DrawingSurface>();
         _drawingSurfaceForm.FormClosed += DrawingSurfaceFormOnFormClosed;
         _settingsManager = settingsManager;
         eventBus.EventRaised += EventBusOnEventRaised;
-        // using (settingsManager.IgnoreChangesOn<PatternViewState>())
-        // using (settingsManager.IgnoreChangesOn<ResolutionPageSettings>())
-        // using (settingsManager.IgnoreChangesOn<WhiteBalancePageSettings>())
-        // using (settingsManager.IgnoreChangesOn<ConvergencePageSettings>())
-        // using (settingsManager.IgnoreChangesOn<SpectrumPageSettings>())
-        // using (settingsManager.IgnoreChangesOn<GammaPageSettings>())
-        // {
         InitializeComponent();
+        Icon = new Icon(Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("TestPatternGenerator.favicon.ico")!);
         comboBox1.DataSource = Enum.GetValues<ResolutionPatterns>()
             .Select(x => new Tuple<ResolutionPatterns, string>(x, x.ToString())).ToList();
         comboBox1.ValueMember = "Item1";
@@ -58,10 +54,9 @@ public sealed partial class MainForm : Form
         comboBox3.ValueMember = "Item1";
         comboBox3.DisplayMember = "Item2";
 
-        comboBox4.DataSource = new Tuple<int, string>[] { new(1, "1"), new(2, "2"), new(3, "3") };
+        comboBox4.DataSource = new Tuple<int, string>[] {new(1, "1"), new(2, "2"), new(3, "3")};
         comboBox4.ValueMember = "Item1";
         comboBox4.DisplayMember = "Item2";
-        // }
 
         resolutionSettings.OnChange(OnResolutionSettingsChanged);
         OnResolutionSettingsChanged(resolutionSettings.CurrentValue);
@@ -118,7 +113,7 @@ public sealed partial class MainForm : Form
         _convergenceSettings = obj;
         using (_settingsManager.IgnoreChangesOn<ConvergencePageSettings>())
         {
-            tabControl3.SelectedIndex = (int)obj.Pattern;
+            tabControl3.SelectedIndex = (int) obj.Pattern;
             numericUpDown9.Value = obj.StrokeThickness;
             checkBox2.Checked = obj.RedEnabled;
             checkBox3.Checked = obj.GreenEnabled;
@@ -144,12 +139,14 @@ public sealed partial class MainForm : Form
                 break;
             case ApplicationEvents.GoToPreviousPatternCategory:
                 _patternViewState.ActivePatternCategory =
-                    (PatternCategories)((((int)_patternViewState.ActivePatternCategory - 1) % PatternCategoryCount + PatternCategoryCount) % PatternCategoryCount);
+                    (PatternCategories) ((((int) _patternViewState.ActivePatternCategory - 1) % PatternCategoryCount +
+                                          PatternCategoryCount) % PatternCategoryCount);
                 _settingsManager.SetSettings(_patternViewState);
                 break;
             case ApplicationEvents.GoToNextPatternCategory:
                 _patternViewState.ActivePatternCategory =
-                    (PatternCategories)((((int)_patternViewState.ActivePatternCategory + 1) % PatternCategoryCount + PatternCategoryCount) % PatternCategoryCount);
+                    (PatternCategories) ((((int) _patternViewState.ActivePatternCategory + 1) % PatternCategoryCount +
+                                          PatternCategoryCount) % PatternCategoryCount);
                 _settingsManager.SetSettings(_patternViewState);
                 break;
         }
@@ -163,7 +160,7 @@ public sealed partial class MainForm : Form
         _whiteBalancePageSettings = obj;
         using (_settingsManager.IgnoreChangesOn<WhiteBalancePageSettings>())
         {
-            numericUpDown1.Value = (decimal)_whiteBalancePageSettings.PatchRatio;
+            numericUpDown1.Value = (decimal) _whiteBalancePageSettings.PatchRatio;
             numericUpDown2.Value = _whiteBalancePageSettings.PatchCount;
             numericUpDown5.Value = _whiteBalancePageSettings.WhitePointColor2;
             numericUpDown6.Value = _whiteBalancePageSettings.WhitePointColor1;
@@ -179,18 +176,18 @@ public sealed partial class MainForm : Form
             return;
 
         _patternViewState = obj;
-        tabControl1.SelectedIndex = (int)_patternViewState.ActivePatternCategory;
+        tabControl1.SelectedIndex = (int) _patternViewState.ActivePatternCategory;
         using (_settingsManager.IgnoreChangesOn<PatternViewState>())
         {
             checkBox1.Checked = obj.UseCustomTransformMatrix;
             if (obj.TransformMatrix != null)
             {
-                matrix11.Value = (decimal)obj.TransformMatrix.Elements[0];
-                matrix12.Value = (decimal)obj.TransformMatrix.Elements[1];
-                matrix21.Value = (decimal)obj.TransformMatrix.Elements[2];
-                matrix22.Value = (decimal)obj.TransformMatrix.Elements[3];
-                matrix31.Value = (decimal)obj.TransformMatrix.Elements[4];
-                matrix32.Value = (decimal)obj.TransformMatrix.Elements[5];
+                matrix11.Value = (decimal) obj.TransformMatrix.Elements[0];
+                matrix12.Value = (decimal) obj.TransformMatrix.Elements[1];
+                matrix21.Value = (decimal) obj.TransformMatrix.Elements[2];
+                matrix22.Value = (decimal) obj.TransformMatrix.Elements[3];
+                matrix31.Value = (decimal) obj.TransformMatrix.Elements[4];
+                matrix32.Value = (decimal) obj.TransformMatrix.Elements[5];
             }
 
             obj.PredefinedTransforms ??= new List<PredefinedTransforms>();
@@ -252,37 +249,34 @@ public sealed partial class MainForm : Form
 
     private void ResolutionNumericUpDown1ValueChanged(object sender, EventArgs e)
     {
-        _resolutionSettings.Color1Size = (int)resolution_numericUpDown1.Value;
-        if (checkBox6.Checked)
-        {
-            resolution_numericUpDown2.Value = (int)resolution_numericUpDown1.Value;
-        }
+        _resolutionSettings.Color1Size = (int) resolution_numericUpDown1.Value;
+        if (checkBox6.Checked) resolution_numericUpDown2.Value = (int) resolution_numericUpDown1.Value;
 
         _settingsManager.SetSettings(_resolutionSettings);
     }
 
     private void ResolutionNumericUpDown2ValueChanged(object sender, EventArgs e)
     {
-        _resolutionSettings.Color2Size = (int)resolution_numericUpDown2.Value;
+        _resolutionSettings.Color2Size = (int) resolution_numericUpDown2.Value;
         _settingsManager.SetSettings(_resolutionSettings);
     }
 
     private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
     {
         _resolutionSettings.Pattern =
-            (ResolutionPatterns)(comboBox1.SelectedValue ?? ResolutionPatterns.HorizontalStripe);
+            (ResolutionPatterns) (comboBox1.SelectedValue ?? ResolutionPatterns.HorizontalStripe);
         _settingsManager.SetSettings(_resolutionSettings);
     }
 
     private void numericUpDown3_ValueChanged(object sender, EventArgs e)
     {
-        _resolutionSettings.PatchSize = (int)numericUpDown3.Value;
+        _resolutionSettings.PatchSize = (int) numericUpDown3.Value;
         _settingsManager.SetSettings(_resolutionSettings);
     }
 
     private void numericUpDown4_ValueChanged(object sender, EventArgs e)
     {
-        _resolutionSettings.Color2IncreasingInterval = (int)numericUpDown4.Value;
+        _resolutionSettings.Color2IncreasingInterval = (int) numericUpDown4.Value;
         _settingsManager.SetSettings(_resolutionSettings);
     }
 
@@ -290,8 +284,8 @@ public sealed partial class MainForm : Form
     {
         if (_settingsManager.IsWriteIgnoredOn<PatternViewState>())
             return;
-        _patternViewState.TransformMatrix = new Matrix((float)matrix11.Value, (float)matrix12.Value,
-            (float)matrix21.Value, (float)matrix22.Value, (float)matrix31.Value, (float)matrix32.Value);
+        _patternViewState.TransformMatrix = new Matrix((float) matrix11.Value, (float) matrix12.Value,
+            (float) matrix21.Value, (float) matrix22.Value, (float) matrix31.Value, (float) matrix32.Value);
         _settingsManager.SetSettings(_patternViewState);
     }
 
@@ -306,49 +300,49 @@ public sealed partial class MainForm : Form
     private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
     {
         _whiteBalancePageSettings.Pattern =
-            (WhiteBalancePatterns)(comboBox2.SelectedValue ?? WhiteBalancePatterns.BlackPoint);
+            (WhiteBalancePatterns) (comboBox2.SelectedValue ?? WhiteBalancePatterns.BlackPoint);
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void numericUpDown7_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.BlackPointColor1 = (int)numericUpDown7.Value;
+        _whiteBalancePageSettings.BlackPointColor1 = (int) numericUpDown7.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void numericUpDown8_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.BlackPointColor2 = (int)numericUpDown8.Value;
+        _whiteBalancePageSettings.BlackPointColor2 = (int) numericUpDown8.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void numericUpDown6_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.WhitePointColor1 = (int)numericUpDown6.Value;
+        _whiteBalancePageSettings.WhitePointColor1 = (int) numericUpDown6.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void numericUpDown5_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.WhitePointColor2 = (int)numericUpDown5.Value;
+        _whiteBalancePageSettings.WhitePointColor2 = (int) numericUpDown5.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        _patternViewState.ActivePatternCategory = (PatternCategories)tabControl1.SelectedIndex;
+        _patternViewState.ActivePatternCategory = (PatternCategories) tabControl1.SelectedIndex;
         _settingsManager.SetSettings(_patternViewState);
     }
 
     private void numericUpDown2_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.PatchCount = (int)numericUpDown2.Value;
+        _whiteBalancePageSettings.PatchCount = (int) numericUpDown2.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
     private void numericUpDown1_ValueChanged(object sender, EventArgs e)
     {
-        _whiteBalancePageSettings.PatchRatio = (float)numericUpDown1.Value;
+        _whiteBalancePageSettings.PatchRatio = (float) numericUpDown1.Value;
         _settingsManager.SetSettings(_whiteBalancePageSettings);
     }
 
@@ -430,13 +424,13 @@ public sealed partial class MainForm : Form
 
     private void numericUpDown9_ValueChanged(object sender, EventArgs e)
     {
-        _convergenceSettings.StrokeThickness = (int)numericUpDown9.Value;
+        _convergenceSettings.StrokeThickness = (int) numericUpDown9.Value;
         _settingsManager.SetSettings(_convergenceSettings);
     }
 
     private void tabControl3_SelectedIndexChanged(object sender, EventArgs e)
     {
-        _convergenceSettings.Pattern = (ConvergencePatterns)tabControl3.SelectedIndex;
+        _convergenceSettings.Pattern = (ConvergencePatterns) tabControl3.SelectedIndex;
         _settingsManager.SetSettings(_convergenceSettings);
     }
 
@@ -470,7 +464,7 @@ public sealed partial class MainForm : Form
 
     private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
     {
-        _spectrumSettings.Pattern = (SpectrumPatterns)(comboBox3.SelectedValue ?? SpectrumPatterns.Horizontal);
+        _spectrumSettings.Pattern = (SpectrumPatterns) (comboBox3.SelectedValue ?? SpectrumPatterns.Horizontal);
         _settingsManager.SetSettings(_spectrumSettings);
     }
 
@@ -512,7 +506,7 @@ public sealed partial class MainForm : Form
 
     private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
     {
-        _gammaSettings.StripeThickness = (int)(comboBox4.SelectedValue ?? 1);
+        _gammaSettings.StripeThickness = (int) (comboBox4.SelectedValue ?? 1);
         _settingsManager.SetSettings(_gammaSettings);
     }
 

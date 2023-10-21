@@ -7,7 +7,6 @@
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>latest</LangVersion>
-        <!--        <StartupObject>TestPatternGenerator.Program</StartupObject>-->
         <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -29,7 +28,7 @@
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
     <ItemGroup>
-        <Content Include="favicon.ico" />
+        <EmbeddedResource Include="favicon.ico"/>
     </ItemGroup>
     <ItemGroup>
         <RdXmlFile Include="rd.xml"/>
@@ -63,10 +62,10 @@
             <DependentUpon>PatternSurface.cs</DependentUpon>
         </Compile>
         <Compile Update="Controls\NoDblClickLabel.cs">
-          <SubType>Component</SubType>
+            <SubType>Component</SubType>
         </Compile>
         <Compile Update="Controls\RepeatButton.cs">
-          <SubType>Component</SubType>
+            <SubType>Component</SubType>
         </Compile>
     </ItemGroup>
 

@@ -7,7 +7,7 @@ namespace TestPatternGenerator.Controls;
 ///     Repeat button WinForms control. Behaves exactly like standard WinForms button with additional
 ///     repeater functionality: when button is pressed and hold, after <c>InitialDelay</c> button starts
 ///     emitting <c>MouseUp</c> event with <c></c>
-///   Source: https://www.codeproject.com/Articles/629644/Auto-repeat-Button-in-10-Minutes
+///     Source: https://www.codeproject.com/Articles/629644/Auto-repeat-Button-in-10-Minutes
 /// </summary>
 public class RepeatButton : Button
 {
