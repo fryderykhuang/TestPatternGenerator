@@ -10,6 +10,7 @@
         <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>favicon.ico</ApplicationIcon>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <!--        <IsAotCompatible>true</IsAotCompatible>-->
