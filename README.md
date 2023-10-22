@@ -4,7 +4,7 @@ Test pattern generator mainly for calibration of CRT monitors.
 
 ## Motivation
 
-1. Most existing test pattern generators for monitor calibration is not Hi-DPI awareness, will be scaled by Windows automatically, result in blurry polygon edge and fonts.
+1. Most existing test pattern generators for monitor calibration is not Hi-DPI aware, will be scaled by Windows automatically, result in blurry polygon edge and fonts(although GDI auto scaling is very high quality, pixel perfect rendering is still not guaranteed).
 2. As a hands-on WinForm practice session for me.
 
 ## Highlights
